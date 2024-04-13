@@ -84,7 +84,9 @@ class DialogCustom {
           context: context,
           builder: (BuildContext buildContext) {
             Future.delayed(Duration(seconds: duration), () {
-              Navigator.of(buildContext).pop();
+              if (buildContext.mounted) {
+                Navigator.of(buildContext).pop();
+              }
             });
             return Center(
                 child: Container(

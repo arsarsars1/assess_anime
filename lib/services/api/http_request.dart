@@ -14,71 +14,84 @@ class HttpRequestCustom {
       'application/x-www-form-urlencoded; charset=UTF-8';
   static const String contentTypeJson = 'application/json; charset=UTF-8';
 
-  static Future<http.Response> post({required String url, String? body}) async {
-    Map<String, String> header;
-    if (Config.token.isNotEmpty) {
-      header = <String, String>{
-        HttpHeaders.contentTypeHeader: HttpRequestCustom.contentTypeJson,
-        HttpHeaders.authorizationHeader: 'Bearer ${Config.token}'
-      };
-    } else {
-      header = <String, String>{
-        'Content-Type': HttpRequestCustom.contentTypeJson,
-      };
-    }
+  static Future<http.Response?> post(
+      {required String url, String? body}) async {
+    if (await Utilities.internetAvailable()) {
+      Map<String, String> header;
+      if (Config.token.isNotEmpty) {
+        header = <String, String>{
+          HttpHeaders.contentTypeHeader: HttpRequestCustom.contentTypeJson,
+          HttpHeaders.authorizationHeader: 'Bearer ${Config.token}'
+        };
+      } else {
+        header = <String, String>{
+          'Content-Type': HttpRequestCustom.contentTypeJson,
+        };
+      }
 
-    var response = await http.post(
-      Uri.parse(Config.BASE_URL + url),
-      headers: header,
-      body: body,
-    );
-    debugPrintUI(response, body: body);
-    return response;
+      var response = await http.post(
+        Uri.parse(Config.BASE_URL + url),
+        headers: header,
+        body: body,
+      );
+      debugPrintUI(response, body: body);
+      return response;
+    } else {
+      return null;
+    }
   }
 
-  static Future<http.Response> get(
+  static Future<http.Response?> get(
       {required String url,
       String contentType = HttpRequestCustom.contentTypeJson}) async {
-    Map<String, String> header;
-    if (Config.token.isNotEmpty) {
-      header = <String, String>{
-        HttpHeaders.contentTypeHeader: contentType,
-        HttpHeaders.authorizationHeader: 'Bearer ${Config.token}'
-      };
+    if (await Utilities.internetAvailable()) {
+      Map<String, String> header;
+      if (Config.token.isNotEmpty) {
+        header = <String, String>{
+          HttpHeaders.contentTypeHeader: contentType,
+          HttpHeaders.authorizationHeader: 'Bearer ${Config.token}'
+        };
+      } else {
+        header = <String, String>{
+          'Content-Type': HttpRequestCustom.contentTypeJson,
+        };
+      }
+      var response = await http.get(
+        Uri.parse(Config.BASE_URL + url),
+        headers: header,
+      );
+      debugPrintUI(response);
+      return response;
     } else {
-      header = <String, String>{
-        'Content-Type': HttpRequestCustom.contentTypeJson,
-      };
+      return null;
     }
-    var response = await http.get(
-      Uri.parse(Config.BASE_URL + url),
-      headers: header,
-    );
-    debugPrintUI(response);
-    return response;
   }
 
-  static Future<http.Response> delete(
+  static Future<http.Response?> delete(
       {required String url,
       String contentType = HttpRequestCustom.contentTypeJson}) async {
-    Map<String, String> header;
+    if (await Utilities.internetAvailable()) {
+      Map<String, String> header;
 
-    if (Config.token.isNotEmpty) {
-      header = <String, String>{
-        HttpHeaders.contentTypeHeader: contentType,
-        HttpHeaders.authorizationHeader: 'Bearer ${Config.token}'
-      };
+      if (Config.token.isNotEmpty) {
+        header = <String, String>{
+          HttpHeaders.contentTypeHeader: contentType,
+          HttpHeaders.authorizationHeader: 'Bearer ${Config.token}'
+        };
+      } else {
+        header = <String, String>{
+          'Content-Type': HttpRequestCustom.contentTypeJson,
+        };
+      }
+      var response = await http.delete(
+        Uri.parse(Config.BASE_URL + url),
+        headers: header,
+      );
+      debugPrintUI(response);
+      return response;
     } else {
-      header = <String, String>{
-        'Content-Type': HttpRequestCustom.contentTypeJson,
-      };
+      return null;
     }
-    var response = await http.delete(
-      Uri.parse(Config.BASE_URL + url),
-      headers: header,
-    );
-    debugPrintUI(response);
-    return response;
   }
 
   upload() async {

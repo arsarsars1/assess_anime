@@ -23,6 +23,7 @@ dependencies:
   url_launcher: ^6.1.5
   just_audio_libwinmedia: ^0.0.4
   just_audio: ^0.9.18
+  flutter_tts: ^4.0.2
 
 dev_dependencies:
   flutter_test:

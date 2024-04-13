@@ -1,11 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:assess_anime/core/helper/dialog_custom.dart';
-import 'package:assess_anime/core/utils/extension.dart';
 import 'package:assess_anime/services/navigation_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utilities {
@@ -104,41 +105,44 @@ class Utilities {
     );
   }
 
-  static String displayStateCity(
-      {required String address, required String state, required String city}) {
-    return
-        // address.isNotNullOrEmpty()
-        //   ? address  :
-        city.toSimpleText().isNotNullOrEmpty() &&
-                state.toSimpleText().isNotNullOrEmpty()
-            ? "${state.toSimpleText()}/${city.toSimpleText()}"
-            : state.toSimpleText().isNotNullOrEmpty() &&
-                    city.toSimpleText().isNotNullOrEmpty() == false
-                ? state.toSimpleText()
-                : city.toSimpleText();
+  static Future<void> speechToText(String text,
+      {bool isPlaying = false}) async {
+    try {
+      FlutterTts flutterTts = FlutterTts();
+      if (Platform.isIOS) {
+        await flutterTts.setSharedInstance(true);
+        await flutterTts.setIosAudioCategory(
+            IosTextToSpeechAudioCategory.ambient,
+            [
+              IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+              IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+              IosTextToSpeechAudioCategoryOptions.mixWithOthers
+            ],
+            IosTextToSpeechAudioMode.voicePrompt);
+      }
+      await flutterTts.awaitSpeakCompletion(true);
+      if (isPlaying) {
+        await flutterTts.stop();
+      } else {
+        await flutterTts.speak(text);
+      }
+    } on Exception catch (ex) {
+      Utilities.debugPrintCustom(ex);
+    }
   }
 
   static Future<bool> internetAvailable() async {
     try {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.mobile) {
-        return true;
-      } else if (connectivityResult == ConnectivityResult.wifi) {
-        return true;
-      } else {
-        return false;
-      }
+      List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
+      return connectivityResult.any((element) =>
+          element == ConnectivityResult.mobile &&
+                  element == ConnectivityResult.wifi
+              ? true
+              : false);
     } catch (e) {
       return false;
     }
-  }
-
-  static String showName(String? name, String? username) {
-    return name.isNotNullOrEmpty()
-        ? name!
-        : username.isNotNullOrEmpty()
-            ? username!
-            : "";
   }
 
   static String hasValidUrl(String value) {
@@ -167,15 +171,9 @@ class Utilities {
   }
 
   static String generateRandomId() {
-    // Get the current timestamp in milliseconds
     int timestamp = DateTime.now().millisecondsSinceEpoch;
-
-    // Generate a random number between 1000 and 9999
     int random = Random().nextInt(9000) + 1000;
-
-    // Combine timestamp and random number to create the ID
     String randomId = '$timestamp$random';
-
     return randomId;
   }
 }

@@ -16,6 +16,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   AppController cont = Get.find<AppController>();
+  AppController controller = Get.find<AppController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.login(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

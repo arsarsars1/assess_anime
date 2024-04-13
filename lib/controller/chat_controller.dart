@@ -1,30 +1,26 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:assess_anime/core/helper/dialog_custom.dart';
-import 'package:assess_anime/core/utils/utilities.dart';
+import 'package:assess_anime/model/chat_model.dart';
 import 'package:assess_anime/services/api/api_constants.dart';
 import 'package:assess_anime/services/api/http_request.dart';
-import 'package:assess_anime/services/config/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class AppController extends GetxController {
+class ChatController extends GetxController {
   var isLoading = false.obs;
 
-  Future<void> login(BuildContext context) async {
+  Rx<ChatModel?> chatModel = Rx<ChatModel?>(null);
+
+  Future<void> getChat(BuildContext context) async {
     isLoading(true);
-    await HttpRequestCustom.post(
-        url: APIConstant.login,
-        body: jsonEncode({
-          "deviceId": Utilities.generateRandomId(),
-          "devicePlatform": Platform.isAndroid ? "android" : "iOS",
-        })).then((value) {
+    await HttpRequestCustom.get(url: APIConstant.chats).then((value) {
       if (value != null && value.statusCode == 200) {
         isLoading(false);
         Map<String, dynamic> jsonMap = jsonDecode(value.body);
-        Config.token = jsonMap['accessToken'];
+        chatModel(ChatModel.fromJson(jsonMap));
       } else {
+        chatModel(null);
         isLoading(false);
         DialogCustom.showPopupDialog(
             message: "Request Failed", context: context);

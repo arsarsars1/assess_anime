@@ -20,18 +20,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AppController controller = Get.find<AppController>();
-  NavigatorState? get _navigator => NavigationService.navigatorKey.currentState;
-
-  @override
-  void initState() {
-    super.initState();
-    controller.login(context);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       navigatorKey: NavigationService.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

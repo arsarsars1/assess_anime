@@ -1,5 +1,6 @@
 import 'package:assess_anime/controller/charcter_controller.dart';
 import 'package:assess_anime/core/colors/colors.dart';
+import 'package:assess_anime/screen/chat_page/chat_page.dart';
 import 'package:assess_anime/services/navigation_service.dart';
 import 'package:assess_anime/widgets/custom_button.dart';
 import 'package:assess_anime/widgets/field_input.dart';
@@ -88,9 +89,8 @@ class _CreateCharacterState extends State<CreateCharacter> {
                     onTap: () {
                       setState(() {});
                       if (controller.isField) {
+                        NavigationService.pushRoute(const ChatPage());
                         controller.createCharacter(context);
-                        // NavigationService.pushRoute(const CreateCharacter(),
-                        //     fullscreenDialog: true);
                       }
                     },
                     title: "Next",

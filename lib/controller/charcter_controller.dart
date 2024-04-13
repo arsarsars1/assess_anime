@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:assess_anime/core/helper/dialog_custom.dart';
 import 'package:assess_anime/core/utils/extension.dart';
+import 'package:assess_anime/screen/chat_page/chat_page.dart';
 import 'package:assess_anime/services/api/api_constants.dart';
 import 'package:assess_anime/services/api/http_request.dart';
+import 'package:assess_anime/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,14 +48,14 @@ class CharacterController extends GetxController {
           "height": "60",
           "occupation": "actor"
         })).then((value) {
-      if (value.statusCode == 200) {
+      if (value != null && value.statusCode == 200) {
         isLoading(false);
         Map<String, dynamic> jsonMap = jsonDecode(value.body);
         jsonMap.forEach((key, value) {
           print(key);
           print(value);
+          NavigationService.pushRoute(const ChatPage());
         });
-        // Config.token = jsonMap['accessToken'];
       } else {
         isLoading(false);
         DialogCustom.showPopupDialog(
