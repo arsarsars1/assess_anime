@@ -33,9 +33,11 @@ class TextFieldCustom extends StatelessWidget {
   final bool obscureText;
   final InputDecoration? decoration;
   final List<TextInputFormatter>? inputFormatters;
+  final Function()? onTap;
 
   const TextFieldCustom(
       {super.key,
+      this.onTap,
       this.title,
       this.enabled = true,
       this.readOnly = false,
@@ -85,6 +87,9 @@ class TextFieldCustom extends StatelessWidget {
         textInputAction: textInputAction,
         maxLength: maxLength,
         controller: controller,
+        onTapOutside: (d) => onTap,
+        onTap: onTap,
+        onEditingComplete: onTap,
         textCapitalization: TextCapitalization.sentences,
         style: style ??
             Theme.of(context).textTheme.bodyMedium!.copyWith(

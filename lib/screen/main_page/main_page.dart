@@ -1,3 +1,4 @@
+import 'package:assess_anime/controller/app_controller.dart';
 import 'package:assess_anime/controller/main_controller.dart';
 import 'package:assess_anime/screen/create_character/create_character.dart';
 import 'package:assess_anime/screen/main_page/widget/main_widget.dart';
@@ -14,43 +15,47 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  AppController cont = Get.find<AppController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GetX(
           init: MainController(),
           builder: (controller) {
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: List.generate(
-                      3,
-                      (index) => MainWidget(
-                        index: index + 1,
-                        controller: controller,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Row(children: [
-                    Expanded(
-                      child: CustomButton(
-                        onTap: () {
-                          if (controller.selectedItem.isNotEmpty) {
-                            NavigationService.pushRoute(const CreateCharacter(),
-                                fullscreenDialog: true);
-                          }
-                        },
-                        title: "Start",
-                        isSelected: controller.selectedItem.isNotEmpty,
-                      ),
-                    ),
-                  ]),
-                ]);
+            return cont.isLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                        Row(
+                          children: List.generate(
+                            3,
+                            (index) => MainWidget(
+                              index: index + 1,
+                              controller: controller,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(children: [
+                          Expanded(
+                            child: CustomButton(
+                              onTap: () {
+                                if (controller.selectedItem.isNotEmpty) {
+                                  NavigationService.pushRoute(
+                                      const CreateCharacter(),
+                                      fullscreenDialog: true);
+                                }
+                              },
+                              title: "Start",
+                              isSelected: controller.selectedItem.isNotEmpty,
+                            ),
+                          ),
+                        ]),
+                      ]);
           }),
     );
   }

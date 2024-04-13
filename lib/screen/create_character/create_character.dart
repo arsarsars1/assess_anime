@@ -35,29 +35,29 @@ class _CreateCharacterState extends State<CreateCharacter> {
               ),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: controller.isloading.value
-                    ? const CircularProgressIndicator()
+                child: controller.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView(shrinkWrap: true, children: [
                         FieldInput(
-                          updateState: () => setState(() {}),
-                          controller: controller.name.value,
+                          onTap: () => setState(() {}),
+                          controller: controller.name,
                           title: "Name",
                         ),
                         FieldInput(
-                          updateState: () => setState(() {}),
-                          controller: controller.intro.value,
+                          onTap: () => setState(() {}),
+                          controller: controller.intro,
                           title: "Intro",
                           maxLine: 3,
                         ),
                         FieldInput(
-                          updateState: () => setState(() {}),
-                          controller: controller.description.value,
+                          onTap: () => setState(() {}),
+                          controller: controller.description,
                           title: "Description",
                           maxLine: 3,
                         ),
                         FieldInput(
-                          updateState: () => setState(() {}),
-                          controller: controller.firstMsg.value,
+                          onTap: () => setState(() {}),
+                          controller: controller.firstMsg,
                           title: "First Message",
                           maxLine: 3,
                         ),
@@ -87,13 +87,14 @@ class _CreateCharacterState extends State<CreateCharacter> {
                   child: CustomButton(
                     onTap: () {
                       setState(() {});
-                      if (controller.isField()) {
-                        NavigationService.pushRoute(const CreateCharacter(),
-                            fullscreenDialog: true);
+                      if (controller.isField) {
+                        controller.createCharacter(context);
+                        // NavigationService.pushRoute(const CreateCharacter(),
+                        //     fullscreenDialog: true);
                       }
                     },
                     title: "Next",
-                    isSelected: controller.isField(),
+                    isSelected: controller.isField,
                   ),
                 ),
               ]),

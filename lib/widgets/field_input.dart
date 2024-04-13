@@ -8,14 +8,14 @@ class FieldInput extends StatelessWidget {
   final String title;
   final bool isRequired;
   final TextEditingController controller;
-  final Function() updateState;
+  final Function() onTap;
   const FieldInput(
       {super.key,
       this.maxLine = 1,
       required this.controller,
       required this.title,
       this.isRequired = true,
-      required this.updateState});
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +69,14 @@ class FieldInput extends StatelessWidget {
       );
   Widget showField({EdgeInsets? padding}) => TextFieldCustom(
         maxLines: maxLine,
+        onTap: () => onTap(),
         padding:
             padding ?? const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         borderColor: Colors.transparent,
         controller: controller,
+        onFieldSubmit: (s) => onTap(),
         validator: (value) {
-          updateState();
+          onTap();
           if (isRequired) {
             if (value.isNotNullOrEmpty()) {
               return null;
